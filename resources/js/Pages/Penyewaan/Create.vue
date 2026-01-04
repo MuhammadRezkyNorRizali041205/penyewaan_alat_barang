@@ -24,6 +24,32 @@ const isAuthenticated = computed(() => {
   return page.props.auth && page.props.auth.user;
 });
 
+// Calculate rental days between two dates
+const rentalDays = computed(() => {
+  if (!form.value.tanggal_mulai || !form.value.tanggal_selesai) return 0;
+  const start = new Date(form.value.tanggal_mulai);
+  const end = new Date(form.value.tanggal_selesai);
+  const diffTime = Math.abs(end - start);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return Math.max(1, diffDays);
+});
+
+// Calculate total price based on: price per day × rental days × quantity
+const calculatedTotal = computed(() => {
+  if (!props.selectedAlat || !form.value.jumlah) return 0;
+  const pricePerDay = props.selectedAlat.harga_sewa_per_hari ?? props.selectedAlat.harga_sewa;
+  return pricePerDay * rentalDays.value * form.value.jumlah;
+});
+
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(value);
+};
+
 const canSubmit = computed(() => {
   return (
     isAuthenticated.value &&
@@ -100,15 +126,21 @@ const submit = () => {
     <div v-if="props.selectedAlat" class="bg-white rounded-lg p-6 mb-6">
       <h2 class="text-lg font-semibold mb-2">{{ props.selectedAlat.nama_alat }}</h2>
       <p class="text-gray-600 mb-4">{{ props.selectedAlat.deskripsi }}</p>
-      <div class="grid grid-cols-2 gap-4">
+      <div class="grid grid-cols-2 gap-4 mb-4">
         <div>
           <span class="text-sm text-gray-500">Harga per Hari</span>
-          <p class="font-bold text-green-600">Rp {{ Number(props.selectedAlat.harga_sewa_per_hari).toLocaleString('id-ID') }}</p>
+          <p class="font-bold text-green-600">{{ formatCurrency(props.selectedAlat.harga_sewa_per_hari) }}</p>
         </div>
         <div>
           <span class="text-sm text-gray-500">Stok Tersedia</span>
           <p class="font-bold">{{ props.selectedAlat.stok_tersedia }} unit</p>
         </div>
+      </div>
+      <!-- Price Summary Card -->
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div class="text-sm text-blue-700 mb-2">Estimasi Harga Total:</div>
+        <div class="text-2xl font-bold text-blue-900">{{ formatCurrency(calculatedTotal) }}</div>
+        <div class="text-xs text-blue-600 mt-2">{{ formatCurrency(props.selectedAlat.harga_sewa_per_hari) }} × {{ rentalDays }} hari × {{ form.jumlah }} unit</div>
       </div>
     </div>
 

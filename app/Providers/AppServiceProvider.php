@@ -3,11 +3,13 @@
 namespace App\Providers;
 
 use App\Models\Alat;
+use App\Models\Payment;
 use App\Models\Penyewaan;
 use App\Models\User;
 use App\Observers\AlatObserver;
 use App\Observers\PenyewaanObserver;
 use App\Policies\AlatPolicy;
+use App\Policies\PaymentPolicy;
 use App\Policies\PenyewaanPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -39,5 +41,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Alat::class, AlatPolicy::class);
         Gate::policy(Penyewaan::class, PenyewaanPolicy::class);
         Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(Payment::class, PaymentPolicy::class);
     }
 }

@@ -9,8 +9,13 @@ const props = defineProps({
 });
 
 function formatHarga(value) {
-  if (!value) return '0';
-  return Number(value).toLocaleString('id-ID');
+  if (!value) return 'Rp 0';
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(value);
 }
 </script>
 
@@ -32,8 +37,8 @@ function formatHarga(value) {
       <aside class="space-y-4">
         <div class="bg-white rounded-lg p-4">
           <h3 class="text-lg font-semibold">{{ props.alat.nama_alat ?? props.alat.nama }}</h3>
-          <div class="text-sm text-gray-500 mt-2">Harga</div>
-          <div class="text-2xl font-bold text-green-600">Rp {{ formatHarga(props.alat.harga_sewa_per_hari ?? props.alat.harga_sewa) }} / hari</div>
+          <div class="text-sm text-gray-500 mt-2">Harga per Hari</div>
+          <div class="text-2xl font-bold text-green-600">{{ formatHarga(props.alat.harga_sewa_per_hari ?? props.alat.harga_sewa) }}</div>
           <div class="mt-4">
             <div class="text-sm text-gray-500">Stok Tersedia</div>
             <div class="font-medium">{{ props.alat.stok_tersedia ?? props.alat.stok }} unit</div>

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Penyewaan extends Model
@@ -24,6 +25,8 @@ class Penyewaan extends Model
         'catatan',
         'tanggal_approval',
         'alasan_penolakan',
+        'payment_status',
+        'paid_at',
     ];
 
     protected $casts = [
@@ -31,6 +34,7 @@ class Penyewaan extends Model
         'tanggal_selesai' => 'date',
         'tanggal_approval' => 'datetime',
         'total_harga' => 'decimal:2',
+        'paid_at' => 'datetime',
     ];
 
     public function penyewa(): BelongsTo
@@ -53,6 +57,16 @@ class Penyewaan extends Model
     public function pengembalian(): HasOne
     {
         return $this->hasOne(Pengembalian::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function latestPayment()
+    {
+        return $this->payments()->latest()->first();
     }
 
     /**

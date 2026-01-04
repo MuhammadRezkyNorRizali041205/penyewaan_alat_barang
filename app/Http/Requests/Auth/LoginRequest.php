@@ -6,6 +6,7 @@ use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -26,9 +27,26 @@ class LoginRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        // Skip reCAPTCHA validation in testing environment
+        $rules = [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
+        ];
+
+        if (! app()->environment('testing')) {
+            $rules['g-recaptcha-response'] = ['required', 'string'];
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     */
+    public function messages(): array
+    {
+        return [
+            'g-recaptcha-response.required' => 'reCAPTCHA verification failed. Please try again.',
         ];
     }
 
@@ -41,6 +59,11 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
+        // Verify reCAPTCHA only in production/non-testing
+        if (! app()->environment('testing')) {
+            $this->verifyRecaptcha();
+        }
+
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
@@ -50,6 +73,41 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+    }
+
+    /**
+     * Verify reCAPTCHA token with Google.
+     */
+    private function verifyRecaptcha(): void
+    {
+        $token = $this->input('g-recaptcha-response');
+        $secretKey = config('services.recaptcha.secret');
+
+        if (! $secretKey || ! $token) {
+            throw ValidationException::withMessages([
+                'g-recaptcha-response' => 'reCAPTCHA verification failed.',
+            ]);
+        }
+
+        try {
+            $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                'secret' => $secretKey,
+                'response' => $token,
+            ]);
+
+            $body = $response->json();
+
+            // Check if verification was successful and score is above threshold
+            if (! $body['success'] || ($body['score'] ?? 0) < 0.5) {
+                throw ValidationException::withMessages([
+                    'g-recaptcha-response' => 'reCAPTCHA verification failed. Please try again.',
+                ]);
+            }
+        } catch (\Exception $e) {
+            throw ValidationException::withMessages([
+                'g-recaptcha-response' => 'Unable to verify reCAPTCHA. Please try again later.',
+            ]);
+        }
     }
 
     /**

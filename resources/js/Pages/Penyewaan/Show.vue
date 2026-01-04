@@ -18,7 +18,7 @@
         </div>
 
         <!-- Status Alert -->
-        <div v-if="$page.props.flash.success" class="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded">
+        <div v-if="$page.props.flash?.success" class="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded">
           {{ $page.props.flash.success }}
         </div>
 
@@ -73,12 +73,27 @@
                 Tidak ada alat
               </div>
 
-              <div v-else class="space-y-3">
-                <div v-for="alat in penyewaan.alats" :key="alat.id" class="border-b pb-3">
-                  <p class="font-medium text-gray-900">{{ alat.nama }}</p>
-                  <p class="text-sm text-gray-600">Kategori: {{ alat.kategori.nama }}</p>
-                  <p class="text-sm text-gray-600">Qty: {{ alat.pivot.jumlah }}</p>
-                </div>
+              <div v-else class="overflow-x-auto">
+                <table class="min-w-full border-collapse">
+                  <thead>
+                    <tr class="bg-gray-100 border-b-2 border-gray-300">
+                      <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Nama Barang</th>
+                      <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Kategori</th>
+                      <th class="px-4 py-2 text-center text-sm font-semibold text-gray-700">Jumlah</th>
+                      <th class="px-4 py-2 text-right text-sm font-semibold text-gray-700">Harga Satuan</th>
+                      <th class="px-4 py-2 text-right text-sm font-semibold text-gray-700">Subtotal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="alat in penyewaan.alats" :key="alat.id" class="border-b hover:bg-gray-50">
+                      <td class="px-4 py-3 text-sm font-medium text-gray-900">{{ alat.nama }}</td>
+                      <td class="px-4 py-3 text-sm text-gray-600">{{ alat.kategori?.nama_kategori || '-' }}</td>
+                      <td class="px-4 py-3 text-sm text-center text-gray-600">{{ alat.pivot.jumlah }}</td>
+                      <td class="px-4 py-3 text-sm text-right text-gray-600">Rp {{ formatMoney(alat.pivot.harga_satuan) }}</td>
+                      <td class="px-4 py-3 text-sm text-right font-semibold text-gray-900">Rp {{ formatMoney(alat.pivot.subtotal) }}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

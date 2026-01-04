@@ -2762,3 +2762,949 @@ FINAL GOAL:
 Stabilize the application so that the full rental flow works end-to-end
 WITHOUT introducing any new errors or behavior changes.
 
+
+
+
+You are a Senior Laravel + Inertia + Vue UI Engineer.
+
+Context:
+- This is a Laravel 12 project using Breeze + Inertia + Vue.
+- Authentication logic is already correct and MUST NOT be changed.
+- The goal is ONLY to redesign the login UI.
+
+Task:
+Redesign the login page to look like a professional
+"Sistem Informasi Penyewaan Alat dan Barang".
+
+Rules (MANDATORY):
+1. DO NOT change routes, controllers, or auth logic.
+2. Only edit: resources/js/Pages/Auth/Login.vue
+3. Keep all existing props, form submission, and validation.
+4. Must remain fully compatible with Laravel Breeze.
+
+UI Requirements:
+- Add a clear system title: "Sistem Informasi Penyewaan Alat & Barang"
+- Add a short subtitle explaining the system (rental management, inventory, approval)
+- Use modern layout (centered card, soft shadow, rounded corners)
+- Use Tailwind CSS only
+- Button text should be "Masuk ke Sistem"
+- Labels and text must be in Indonesian
+- Professional, enterprise-style (not startup flashy, not default template)
+
+Accessibility:
+- Inputs must remain accessible
+- Error messages must still appear correctly
+
+Output:
+- Return the FULL updated Login.vue file
+- Do NOT add new dependencies
+- Do NOT add backend logic
+You are a Senior Laravel Authentication Engineer.
+
+Context:
+- Laravel 12
+- Authentication uses Laravel Breeze + Inertia + Vue
+- User table has a `role` column with values:
+  - admin
+  - pegawai
+  - user
+- Filament admin panel is available at /admin
+- Frontend user dashboard is at /dashboard
+
+Task:
+Implement role-based redirect AFTER login.
+
+Rules (MANDATORY):
+1. DO NOT change login routes.
+2. DO NOT modify the login form submission logic.
+3. DO NOT break Laravel Breeze authentication.
+4. Modify ONLY the backend redirect logic after successful login.
+5. Code must be production-ready and clean.
+
+Implementation details:
+- Edit: app/Http/Controllers/Auth/AuthenticatedSessionController.php
+- Inside the `store()` method:
+  - After authentication succeeds
+  - Redirect:
+    - admin → /admin
+    - pegawai → /admin
+    - user → /dashboard
+- Use Auth::user()
+- Use redirect()->intended()
+
+Output:
+- Show the FULL updated `AuthenticatedSessionController.php`
+- Explain briefly why this approach is correct
+- Do NOT add new middleware
+- Do NOT add new packages
+
+
+
+You are a Senior Frontend Engineer specializing in Laravel Breeze + Inertia + Vue + Tailwind.
+
+Context:
+- Laravel 12
+- Authentication uses Laravel Breeze (Inertia)
+- This is a "Sistem Informasi Penyewaan Alat & Barang"
+- Login page must be professional, branded, responsive, and animated
+- MUST NOT break authentication logic
+
+GOALS:
+1. Remove ALL Laravel branding/logo from login page
+2. Replace with custom branding:
+   - Title: "Penyewaan Alat & Barang"
+   - Subtitle: "Sistem manajemen penyewaan peralatan dan inventaris"
+3. Fully responsive layout:
+   - Mobile: full width, stacked
+   - Tablet: centered card
+   - Desktop: centered card with proper spacing
+4. Add smooth animations:
+   - Page fade + slide-up on load
+   - Button loading state on submit
+   - Subtle input focus animation
+5. Keep everything clean, minimal, enterprise-ready
+
+MANDATORY RULES:
+- DO NOT modify auth routes
+- DO NOT modify controllers
+- DO NOT add new dependencies
+- ONLY modify Vue components
+- Use Tailwind CSS only
+- Must be production-ready
+
+FILES TO MODIFY:
+1. resources/js/Components/ApplicationLogo.vue
+   - Replace Laravel logo with a custom icon or simple SVG
+2. resources/js/Layouts/GuestLayout.vue
+   - Ensure layout is centered and responsive
+3. resources/js/Pages/Auth/Login.vue
+   - Improve layout
+   - Add animations using Vue <transition> or Tailwind classes
+   - Add loading state on submit
+
+OUTPUT:
+- Show FULL updated code for:
+  - ApplicationLogo.vue
+  - GuestLayout.vue
+  - Login.vue
+- Explain briefly how responsiveness and animation work
+- Do NOT add explanations unrelated to the task
+
+
+
+
+
+You are a Senior Fullstack Engineer (Laravel + Inertia + Vue + Tailwind)
+with strong UI/UX and Product mindset.
+
+PROJECT CONTEXT:
+- Laravel 12
+- Inertia.js + Vue 3
+- Tailwind CSS
+- Authentication: Laravel Breeze
+- Roles: admin, pegawai, user
+- Domain: Sistem Informasi Penyewaan Alat & Barang
+- Current app is FUNCTIONAL but UI is NOT professional yet
+
+CURRENT PROBLEMS:
+1. Dashboard UI looks basic and unprofessional
+2. Layout feels like a template, not a real product
+3. No payment flow for users after renting
+4. Needs better visual hierarchy, spacing, and responsiveness
+
+MAIN GOALS:
+A. REDESIGN DASHBOARD UI (NO BACKEND BREAKING)
+B. ADD PAYMENT FEATURE FOR USER RENTALS (END-TO-END FLOW)
+
+==================================================
+A. DASHBOARD UI REDESIGN
+==================================================
+
+Redesign the dashboard to look like a REAL, MODERN, PROFESSIONAL SYSTEM.
+
+UI REQUIREMENTS:
+- Clean layout (card-based, good spacing)
+- Clear visual hierarchy (heading → stats → actions)
+- Fully responsive (mobile / tablet / desktop)
+- Smooth micro-interactions (hover, transition)
+- Tailwind CSS only (no UI library)
+
+DASHBOARD STRUCTURE:
+1. Header Section
+   - Page title: "Dashboard"
+   - Short subtitle based on role (user / admin / pegawai)
+
+2. Statistic Cards (TOP SECTION)
+   - Total Penyewaan
+   - Penyewaan Aktif
+   - Menunggu Persetujuan
+   - Total Denda (if any)
+   (Icons + numbers, responsive grid)
+
+3. Quick Actions
+   - Lihat Penyewaan Saya
+   - Marketplace
+   - Pengembalian
+   - Laporan (role-based visibility)
+
+4. Recent Activity Table
+   - Latest rentals
+   - Status badge (pending / approved / rejected / selesai)
+
+RULES:
+- DO NOT change routes
+- DO NOT change controllers logic
+- Only improve Vue pages & layout
+- Must look like a SaaS / enterprise product
+
+FILES TO TOUCH (UI ONLY):
+- resources/js/Layouts/AuthenticatedLayout.vue
+- resources/js/Pages/Dashboard.vue
+- reusable UI components if needed
+
+==================================================
+B. PAYMENT FEATURE (USER SIDE)
+==================================================
+
+Add a PAYMENT FLOW after rental approval.
+
+PAYMENT BUSINESS FLOW:
+1. User submits rental
+2. Admin approves rental
+3. Rental status becomes: "approved_unpaid"
+4. User sees "Bayar Sekarang" button
+5. User completes payment
+6. Status changes to: "paid"
+7. Rental becomes active
+
+PAYMENT SCOPE (NO REAL GATEWAY YET):
+- Simulate payment (manual / dummy payment)
+- Ready to be upgraded to Midtrans later
+
+REQUIRED FEATURES:
+- Payment page (UI)
+- Payment status handling
+- Payment record table
+- Payment history for user
+- Admin can view payment status
+
+DATA MODEL SUGGESTION:
+- payments table
+  - id
+  - penyewaan_id
+  - user_id
+  - amount
+  - status (pending, paid, failed)
+  - paid_at
+
+UI REQUIREMENTS (PAYMENT):
+- Clear total price breakdown
+- Rental duration & item summary
+- Confirm payment button
+- Success / failed state UI
+
+RULES:
+- Do NOT remove existing rental logic
+- Payment must be linked to penyewaan
+- Stock logic must remain correct
+- Clean, readable, maintainable code
+
+==================================================
+OUTPUT EXPECTATION:
+- Step-by-step implementation plan
+- Updated UI structure (what components change)
+- Vue code snippets for:
+  - Dashboard UI
+  - Payment button logic
+  - Payment page UI
+- Clear explanation of flow
+- NO unnecessary refactors
+- NO breaking changes
+
+IMPORTANT:
+Think like you are shipping a REAL PRODUCT,
+not a school assignment.
+
+
+
+Act as a Senior Laravel Engineer with strong Product & UX mindset.
+
+CONTEXT:
+This is a production-ready Laravel 12 application for
+"Sistem Informasi Penyewaan Alat & Barang".
+
+The system is ALREADY FUNCTIONAL.
+DO NOT add dummy data.
+DO NOT change existing business logic.
+DO NOT break current routes.
+
+YOUR TASKS:
+
+1. Refactor USER DASHBOARD so:
+   - All statistics come from REAL database data
+   - No hardcoded or dummy values
+   - Cards appear conditionally (hide if zero)
+   - Actions adapt to rental status (context-aware UI)
+
+2. Implement PAYMENT FLOW:
+   - After admin approval, rental status becomes "approved_unpaid"
+   - User can pay
+   - Payment stored in payments table
+   - Status becomes "paid"
+
+3. Implement INVOICE PDF:
+   - Generate PDF invoice after payment
+   - Professional layout
+   - Unique invoice number
+   - User can download invoice anytime
+   - Use barryvdh/laravel-dompdf
+
+4. Keep everything clean:
+   - Respect existing controllers & models
+   - Add new controller only if necessary
+   - Clear naming & readable code
+
+IMPORTANT RULES:
+- NO DUMMY DATA
+- NO UI-only fake values
+- ALWAYS query database
+- Think like this system will be audited
+
+OUTPUT:
+- Explain what you change
+- Provide controller logic
+- Provide blade PDF template
+- Show how dashboard queries real data
+
+
+You are a SENIOR LARAVEL ENGINEER & SYSTEM ARCHITECT.
+
+IMPORTANT:
+- DO NOT guess.
+- DO NOT create dummy data.
+- DO NOT change UI randomly.
+- DO NOT introduce new bugs.
+- READ THE ENTIRE CODEBASE BEFORE CHANGING ANYTHING.
+
+PROJECT CONTEXT:
+This is a Laravel 12 + Inertia + Tailwind + Filament project:
+"Sistem Informasi Penyewaan Alat & Barang"
+
+CURRENT PROBLEMS (MUST FIX ALL):
+1. Marketplace price is DIFFERENT from Admin Dashboard price
+2. Price shown in Marketplace, Dashboard User, Admin Panel, Invoice must be CONSISTENT
+3. Price calculation logic is scattered and incorrect
+4. Some UI still shows incorrect or outdated price
+5. Invoice PDF must reflect the REAL transaction price
+6. NO dummy data is allowed
+7. Logic must follow Clean Architecture principles
+
+STRICT RULES:
+- There MUST be a SINGLE SOURCE OF TRUTH for price
+- Price calculation MUST happen in BACKEND ONLY
+- Frontend MUST NEVER calculate price
+- Marketplace, Dashboard, Invoice MUST read from the SAME data source
+- No duplicated price fields
+- No magic numbers
+- No hardcoded price in Blade/Vue
+
+DATABASE RULES:
+- `alat.harga_sewa_per_hari` is the ONLY price field
+- `penyewaan.total_harga` MUST be calculated once and stored
+- Add `penyewaan.harga_per_hari_snapshot` if needed to preserve historical accuracy
+
+WHAT YOU MUST DO STEP-BY-STEP:
+1. Audit all models, controllers, services, Blade/Vue files
+2. Identify ALL places where price is:
+   - calculated
+   - formatted
+   - displayed
+3. Remove ALL incorrect price logic
+4. Centralize price calculation in backend (Service / Controller)
+5. Ensure Marketplace reads price ONLY from `Alat`
+6. Ensure Dashboard User reads price ONLY from `Penyewaan`
+7. Ensure Invoice PDF uses `Penyewaan` data, NOT `Alat`
+8. Fix stock reduction logic so it matches approved rentals
+9. Ensure Admin approval does NOT change price unexpectedly
+10. Ensure everything works on desktop, tablet, and mobile
+
+OUTPUT FORMAT (MANDATORY):
+- Explain ROOT CAUSE first
+- Show EXACT FILES to change
+- Show BEFORE vs AFTER code snippets
+- Explain WHY each change is needed
+- Confirm that:
+  ✓ Marketplace price = Admin price = Invoice price
+  ✓ No regression introduced
+  ✓ No UI broken
+  ✓ No authentication issues
+
+FINAL CHECK:
+Before finishing, mentally simulate:
+- User views marketplace
+- User rents item
+- Admin approves
+- User pays
+- User downloads invoice PDF
+
+If ANY step fails → FIX IT before responding.
+
+DO NOT STOP until ALL problems are fixed.
+
+
+MASTER PROMPT — FIX TOTAL MARKETPLACE PENYEWAAN ALAT (FRONTEND + BACKEND)
+
+ROLE & CONTEXT
+
+Bertindaklah sebagai Senior Full-Stack Laravel Engineer + UI Engineer dengan pengalaman membangun marketplace production-ready.
+
+Project ini adalah Sistem Informasi Penyewaan Alat & Barang berbasis:
+
+Laravel 12
+
+Inertia.js + Vue 3
+
+Tailwind CSS
+
+Filament (admin)
+
+MySQL
+
+⚠️ PENTING:
+JANGAN MENAMBAH FITUR BARU sebelum semua logic existing BENAR & KONSISTEN.
+
+🎯 TUJUAN UTAMA (WAJIB)
+
+Harga di Marketplace = harga di Backend Admin
+
+Frontend & Backend pakai 1 sumber data yang sama
+
+Tidak ada data dummy
+
+UI marketplace profesional (inspirasi Tokopedia, tapi TIDAK meniru)
+
+Semua perhitungan berasal dari database, bukan hardcode
+
+Zero regression (tidak merusak fitur lain)
+
+🧠 LANGKAH WAJIB SEBELUM CODING
+1️⃣ AUDIT MODEL & DATABASE (WAJIB)
+
+Baca dan pahami:
+
+App\Models\Alat
+
+Field harga yang BENAR
+
+contoh:
+
+harga_sewa_per_hari
+
+stok_tersedia
+
+Pastikan tidak ada field harga ganda
+
+Tentukan SATU FIELD RESMI untuk harga
+
+👉 Jika ditemukan:
+
+harga_sewa
+
+harga
+
+harga_per_hari
+
+➡️ NORMALISASI → gunakan SATU field saja
+➡️ Update semua akses frontend & backend ke field itu
+
+🔗 SINKRONISASI FRONTEND ↔ BACKEND (WAJIB)
+2️⃣ CONTROLLER MARKETPLACE
+
+Perbaiki:
+
+AlatController@index
+
+AlatController@show
+
+Pastikan:
+
+return Inertia::render('Alat/Index', [
+    'alats' => Alat::select(
+        'id',
+        'nama_alat',
+        'harga_sewa_per_hari',
+        'stok_tersedia',
+        'gambar'
+    )->get()
+]);
+
+
+❌ JANGAN:
+
+format harga di backend
+
+pakai accessor aneh
+
+pakai data dummy
+
+3️⃣ FRONTEND (Vue) — JANGAN HARD CODE
+
+❌ SALAH:
+
+Rp 150.000 / hari
+
+
+✅ BENAR:
+
+Rp {{ formatRupiah(alat.harga_sewa_per_hari) }} / hari
+
+
+Pastikan:
+
+Harga hanya berasal dari props
+
+Tidak ada angka statis di template
+
+🎨 UI MARKETPLACE (PROFESIONAL)
+4️⃣ DESAIN MARKETPLACE (INSPIRED, NOT CLONE)
+
+Buat layout:
+
+Grid responsif (mobile / tablet / desktop)
+
+Card produk:
+
+gambar
+
+nama
+
+harga per hari
+
+stok tersedia
+
+tombol Sewa
+
+Hover animation ringan
+
+Skeleton loading
+
+❌ Jangan:
+
+meniru Tokopedia 1:1
+
+copy class CSS Tokopedia
+
+✅ Gunakan:
+
+Tailwind
+
+spacing bersih
+
+warna netral + primary brand
+
+💸 LOGIC PENYEWAAN & PEMBAYARAN
+5️⃣ SAAT USER MENYEWA (FLOW WAJIB)
+
+User klik Sewa
+
+Masuk ke form penyewaan
+
+Submit → status:
+
+pending
+
+
+STOK TIDAK BERKURANG DI SINI
+
+6️⃣ SAAT ADMIN APPROVE
+
+✅ Baru di sini:
+
+stok_tersedia -= jumlah
+
+stok_disewa += jumlah
+
+status → approved
+
+❌ Jangan kurangi stok di frontend
+
+🧾 INVOICE PDF (WAJIB)
+7️⃣ INVOICE DARI DATA REAL
+
+Buat:
+
+InvoiceController
+
+InvoiceService
+
+Invoice PDF berisi:
+
+Nama penyewa
+
+Nama alat
+
+Jumlah
+
+Harga per hari
+
+Total hari
+
+Total bayar
+
+Status pembayaran
+
+Nomor invoice unik
+
+Gunakan:
+
+barryvdh/laravel-dompdf
+
+Route:
+
+Route::get('/penyewaan/{id}/invoice', ...)
+
+
+Frontend:
+
+Tombol Download Invoice (PDF)
+
+Hanya muncul jika approved / paid
+
+🔐 ROLE & REDIRECT
+8️⃣ ROLE-BASED REDIRECT (WAJIB)
+
+Setelah login:
+
+admin → /admin
+
+pegawai → /admin
+
+user → /dashboard
+
+❌ Jangan hardcode di JS
+✅ Gunakan middleware / LoginResponse
+
+🧪 VALIDASI AKHIR (WAJIB)
+
+Sebelum selesai, pastikan:
+
+ Harga marketplace == admin
+
+ Tidak ada hardcoded angka
+
+ Stok berubah hanya via approval
+
+ Invoice PDF valid
+
+ UI responsif
+
+ Tidak ada error baru
+
+ Semua test tetap PASS
+
+⛔ LARANGAN KERAS
+
+❌ Jangan:
+
+menambah tabel tanpa alasan
+
+rename field tanpa migrasi
+
+mengubah logic approval
+
+menambah dummy data
+
+menghapus fitur lama
+
+✅ OUTPUT AKHIR YANG DIHARAPKAN
+
+Marketplace profesional
+
+Harga sinkron 100%
+
+Frontend & backend satu sumber data
+
+Invoice PDF real
+
+
+
+
+
+
+
+🔐 MASTER PROMPT — HARDENING & SECURITY LOCKDOWN
+Sistem Informasi Penyewaan Alat & Barang (Laravel 12)
+
+ROLE
+
+Bertindaklah sebagai Senior Application Security Engineer + Laravel Architect
+dengan pengalaman hardening aplikasi production (OWASP Top 10).
+
+Kamu bertanggung jawab MENGAMANKAN TOTAL aplikasi tanpa merusak logic existing.
+
+🎯 TUJUAN UTAMA (WAJIB)
+
+❌ Tidak ada vulnerability OWASP Top 10
+
+🛡️ Anti brute-force, bot, & abuse
+
+🚫 Minimalkan risiko DDoS (layer aplikasi)
+
+🔐 Akses berbasis role & policy 100% ketat
+
+🧪 Tidak merusak test yang sudah PASS
+
+⚠️ TIDAK MENAMBAH ERROR BARU
+
+🧠 LANGKAH WAJIB SEBELUM CODING
+1️⃣ AUDIT KESELURUHAN
+
+Baca & pahami:
+
+routes/web.php
+
+Semua Controller
+
+Semua Policy
+
+Middleware auth, verified
+
+Model User, Penyewaan, Alat, Pembayaran
+
+Frontend form (Vue)
+
+❌ DILARANG CODING sebelum audit selesai
+
+🛑 OWASP TOP 10 — WAJIB DITUTUP SEMUA
+2️⃣ AUTHENTICATION & AUTHORIZATION
+
+Pastikan:
+
+Semua route sensitif pakai:
+
+->middleware(['auth', 'verified'])
+
+
+Semua aksi:
+
+approve
+
+reject
+
+payment
+
+invoice
+
+pengembalian
+WAJIB pakai Policy
+
+❌ Tidak boleh:
+
+if(auth()->user()->role === 'admin')
+
+
+✅ WAJIB:
+
+$this->authorize('approve', $penyewaan);
+
+3️⃣ MASS ASSIGNMENT (KRITIS)
+
+Periksa SEMUA model:
+
+protected $fillable = [...]
+
+
+❌ Tidak boleh:
+
+protected $guarded = [];
+
+4️⃣ VALIDATION (WAJIB DI SEMUA REQUEST)
+
+Setiap store, update, process:
+
+WAJIB FormRequest
+
+Validasi:
+
+tanggal
+
+jumlah
+
+stok
+
+harga
+
+status enum
+
+❌ Tidak boleh logic di controller tanpa validasi
+
+5️⃣ SQL INJECTION & XSS
+
+Pastikan:
+
+❌ Tidak ada raw SQL
+
+❌ Tidak ada DB::raw() tanpa alasan
+
+Semua output frontend:
+
+{{ value }}
+
+
+❌ Jangan pakai v-html kecuali disanitasi
+
+🤖 CAPTCHA & ANTI-BOT (WAJIB)
+6️⃣ CAPTCHA (LOGIN + FORM KRITIS)
+
+Gunakan:
+
+Google reCAPTCHA v2 / v3
+atau Cloudflare Turnstile (REKOMENDASI)
+
+WAJIB di:
+
+Login
+
+Register
+
+Ajukan Penyewaan
+
+Pembayaran
+
+Backend:
+
+Validasi captcha server-side
+
+Gagal captcha → reject request
+
+🚦 RATE LIMITING & ANTI-DDOS (APP LEVEL)
+7️⃣ RATE LIMITING
+
+Gunakan:
+
+Route::middleware(['throttle:10,1'])
+
+
+Pasang di:
+
+login
+
+register
+
+penyewaan
+
+pembayaran
+
+invoice download
+
+Tambahkan limiter khusus:
+
+RateLimiter::for('login', ...)
+
+8️⃣ SESSION & COOKIE SECURITY
+
+Pastikan:
+
+SESSION_SECURE_COOKIE=true
+
+SESSION_HTTP_ONLY=true
+
+SameSite=Lax / Strict
+
+Logout:
+
+invalidate session
+
+regenerate token
+
+📁 FILE & STORAGE SECURITY
+9️⃣ UPLOAD FILE (GAMBAR / BUKTI)
+
+Validasi:
+
+mime
+
+size
+
+Rename file (UUID)
+
+Simpan di /storage/app/private
+
+Akses via controller (signed URL)
+
+❌ Jangan expose langsung public upload
+
+🧾 INVOICE PDF SECURITY
+🔟 PDF ACCESS CONTROL
+
+Invoice:
+
+Hanya bisa diakses oleh:
+
+owner
+
+admin
+
+Tidak bisa ditebak via ID
+
+Gunakan UUID / hash
+
+🧠 EXTRA HARDENING (WAJIB)
+
+CSRF aktif di semua form
+
+Disable debug di production
+
+Error message generic (tidak bocorkan stack trace)
+
+Logging aktivitas:
+
+login
+
+approve
+
+payment
+
+download invoice
+
+🧪 FINAL CHECKLIST (WAJIB PASS)
+
+Sebelum selesai:
+
+ OWASP Top 10 aman
+
+ Captcha aktif & tervalidasi
+
+ Rate limit bekerja
+
+ Policy tidak bisa dilewati
+
+ Tidak ada data dummy
+
+ Semua test PASS
+
+ Tidak ada warning di browser console
+
+ Tidak ada 403/500 tidak jelas
+
+⛔ LARANGAN ABSOLUT
+
+❌ Jangan:
+
+menonaktifkan CSRF
+
+bypass policy
+
+menambah middleware aneh
+
+mengubah logic bisnis
+
+menambah fitur baru
+
+✅ OUTPUT YANG DIHARAPKAN
+
+Aplikasi AMAN LEVEL PRODUKSI
+
+Tahan brute-force & bot
+
+Role tidak bisa ditembus

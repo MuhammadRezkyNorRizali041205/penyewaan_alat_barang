@@ -10,6 +10,7 @@ use App\Http\Requests\ApprovePenyewaanRequest;
 use App\Http\Requests\RejectPenyewaanRequest;
 use App\Models\Alat;
 use App\Models\Penyewaan;
+use App\Services\CreatePenyewaanService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +31,7 @@ class PenyewaanController extends Controller
         ]);
     }
 
-    public function store(Request $request): Response
+    public function store(Request $request, CreatePenyewaanService $service): Response
     {
         $this->authorize('create', Penyewaan::class);
 
@@ -51,34 +52,26 @@ class PenyewaanController extends Controller
             'jumlah.min' => 'Jumlah alat minimal 1.',
         ]);
 
-        // Get the alat to check stock
-        $alat = Alat::findOrFail($validated['alat_id']);
-        if ($validated['jumlah'] > $alat->stok_tersedia) {
+        try {
+            // Use service to create rental with proper price calculation
+            $penyewaan = $service->execute(
+                Auth::user(),
+                $validated['tanggal_mulai'],
+                $validated['tanggal_selesai'],
+                [['alat_id' => $validated['alat_id'], 'jumlah' => $validated['jumlah']]],
+                $validated['catatan'] ?? null
+            );
+
             return Inertia::render('Penyewaan/Create', [
-                'selectedAlat' => $alat->load('kategori'),
-                'errors' => ['jumlah' => 'Jumlah melebihi stok tersedia.'],
+                'penyewaan' => $penyewaan->load(['penyewa', 'alats', 'pengembalian']),
+            ]);
+        } catch (\Exception $e) {
+            $alat = Alat::with('kategori')->findOrFail($validated['alat_id']);
+            return Inertia::render('Penyewaan/Create', [
+                'selectedAlat' => $alat,
+                'errors' => ['form' => $e->getMessage()],
             ]);
         }
-
-        // Create penyewaan
-        $penyewaan = Penyewaan::create([
-            'penyewa_id' => Auth::id(),
-            'tanggal_mulai' => $validated['tanggal_mulai'],
-            'tanggal_selesai' => $validated['tanggal_selesai'],
-            'status' => 'pending',
-            'catatan' => $validated['catatan'] ?? null,
-        ]);
-
-        // Attach alat with quantity
-        $penyewaan->alats()->attach($validated['alat_id'], [
-            'jumlah' => $validated['jumlah'],
-            'harga_satuan' => $alat->harga_sewa_per_hari,
-            'subtotal' => $alat->harga_sewa_per_hari * $validated['jumlah'],
-        ]);
-
-        return Inertia::render('Penyewaan/Create', [
-            'penyewaan' => $penyewaan->load(['penyewa', 'alats', 'pengembalian']),
-        ]);
     }
 
     public function index(): Response
@@ -94,7 +87,7 @@ class PenyewaanController extends Controller
 
     public function show(Penyewaan $penyewaan): Response
     {
-        $penyewaan->load(['penyewa', 'alats', 'pengembalian']);
+        $penyewaan->load(['penyewa', 'alats.kategori', 'pengembalian']);
 
         return Inertia::render('Penyewaan/Show', [
             'penyewaan' => $penyewaan,
