@@ -100,7 +100,7 @@ function goToPage(url) {
         <p class="text-gray-400 text-sm mt-1">Coba ubah pencarian atau filter Anda</p>
       </div>
 
-      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 auto-rows-fr">
         <ProductCard
           v-for="alat in props.alats.data"
           :key="alat.id"

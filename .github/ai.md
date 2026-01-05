@@ -3931,3 +3931,153 @@ YOU MUST DEBUG AGAIN UNTIL IT WORKS.
 NO EXCUSES.
 
 THIS IS A CRUD SYSTEM, NOT A DEMO.
+
+
+
+
+
+
+MASTER PROMPT — FIX TOMBOL SEWA & LOGIC PEMESANAN (WAJIB TAAT)
+
+ROLE
+
+Kamu adalah Senior Laravel + Inertia.js (Vue 3) Engineer dengan pengalaman production.
+Fokus kamu adalah memperbaiki bug tanpa merusak sistem yang sudah berjalan.
+
+📌 KONTEKS PROYEK (WAJIB DIPAHAMI)
+
+Framework: Laravel 12 + Inertia.js + Vue 3 + Filament
+
+Marketplace: /alat
+
+Controller marketplace SUDAH BENAR → App\Http\Controllers\Web\AlatController
+
+Semua TEST SUDAH PASS
+
+Backend penyewaan SUDAH ADA & VALID
+
+Masalah BUKAN DI QUERY / CONTROLLER
+
+Masalah terjadi di FRONTEND (Vue / Inertia)
+
+❌ MASALAH UTAMA
+
+Tombol “Sewa” tidak bisa diklik / tidak melakukan apa pun
+
+Tidak ada data masuk ke tabel penyewaans
+
+Tidak ada redirect ke halaman form penyewaan
+
+Tidak ada request ke backend
+
+Admin tidak menerima data untuk approval
+
+Stok tidak berkurang saat user menyewa
+
+🎯 TUJUAN (WAJIB TERCAPAI)
+
+Tombol SEWA BERFUNGSI
+
+Klik tombol:
+
+Redirect ke penyewaan.create
+
+Mengirim alat_id
+
+Form penyewaan:
+
+Tersimpan ke database (penyewaans)
+
+Status awal = pending
+
+Stok belum berkurang saat request, baru berkurang saat approve
+
+Admin / Pegawai:
+
+Melihat request di dashboard
+
+Bisa approve / reject
+
+Tidak boleh:
+
+Mengubah logic bisnis backend
+
+Mengubah test
+
+Mengubah schema DB
+
+Semua tetap PASS TEST
+
+🛑 ATURAN KERAS (JANGAN DILANGGAR)
+
+❌ JANGAN mengubah AlatController
+
+❌ JANGAN mengubah migration
+
+❌ JANGAN mengubah test
+
+❌ JANGAN menambah dummy data
+
+❌ JANGAN rebuild arsitektur
+
+❌ JANGAN menebak-nebak
+
+🔍 LANGKAH WAJIB YANG HARUS KAMU LAKUKAN
+
+Audit frontend
+
+resources/js/Pages/Marketplace/Index.vue
+
+resources/js/Components/ProductCard.vue
+
+Pastikan tombol:
+
+Memiliki @click ATAU <Link>
+
+Route BENAR
+
+Pastikan route ini dipakai:
+
+route('penyewaan.create', { alat_id: alat.id })
+
+
+Pastikan user harus login
+
+Jika belum login:
+
+Redirect ke /login
+
+Gunakan Inertia Link, bukan button mati
+
+✅ OUTPUT YANG WAJIB KAMU BERIKAN
+
+✅ Perbaikan KODE VUE SAJA
+
+✅ File mana yang diubah
+
+✅ Kode sebelum & sesudah (jelas)
+
+✅ Penjelasan singkat KENAPA bug terjadi
+
+✅ Pastikan tidak ada error baru
+
+🧠 PETUNJUK TAMBAHAN
+
+Jika tombol terlihat tapi tidak bisa diklik → event handler hilang
+
+Jika klik tidak redirect → href / route salah
+
+Jika request tidak masuk → frontend tidak mengirim apa pun
+
+Jika stok tidak berubah → memang belum di tahap approve
+
+⛔ STOP CONDITION
+
+Jika kamu tidak yakin, JANGAN KODE.
+Laporkan dulu temuannya.
+
+🚀 TARGET AKHIR
+
+User klik SEWA → data masuk → admin approve → stok berkurang → sistem berjalan NORMAL.
+
+
