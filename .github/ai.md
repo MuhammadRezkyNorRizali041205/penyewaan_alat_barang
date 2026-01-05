@@ -3708,3 +3708,226 @@ Aplikasi AMAN LEVEL PRODUKSI
 Tahan brute-force & bot
 
 Role tidak bisa ditembus
+
+
+
+
+ROLE:
+You are a Senior Laravel 12 Fullstack Engineer with deep expertise in
+Inertia.js, Blade, Routing, Middleware, Security, and UI/UX debugging.
+
+PROJECT CONTEXT:
+This is an existing Laravel 12 project:
+"Sistem Informasi Penyewaan Alat dan Barang"
+
+The Marketplace page (/alat) displays items correctly,
+BUT the "Sewa" button is NOT clickable / NOT working.
+
+CRITICAL RULES (MANDATORY):
+1. DO NOT add dummy data
+2. DO NOT hardcode values
+3. DO NOT change database schema unless REQUIRED
+4. DO NOT break existing routes
+5. DO NOT add new errors
+6. DO NOT assume — VERIFY by checking existing code
+7. Frontend MUST connect to backend properly
+8. Read ALL related files before changing anything
+
+---
+
+TASK OBJECTIVE:
+Fix the "SEWA" button so that:
+- It is clickable
+- It redirects or submits correctly
+- It respects authentication
+- It respects stock availability
+- It triggers the rental flow properly
+
+---
+
+STEP-BY-STEP TASKS (MUST FOLLOW ORDER):
+
+### 1️⃣ FRONTEND CHECK (MANDATORY)
+- Inspect Marketplace UI (/alat)
+- Verify:
+  - Is the button <a>, <button>, or form submit?
+  - Is it disabled by CSS, overlay, or z-index?
+  - Is it blocked by auth middleware?
+- Fix:
+  - Pointer-events
+  - z-index
+  - disabled attributes
+  - incorrect href or @click binding
+
+### 2️⃣ ROUTE VALIDATION
+- Check web.php for:
+  - penyewaan.create
+  - penyewaan.store
+- Ensure:
+  - Route exists
+  - HTTP method matches (GET for form, POST for submit)
+  - Route name used in frontend is CORRECT
+
+### 3️⃣ AUTH FLOW (IMPORTANT)
+- If user is NOT logged in:
+  - Redirect to /login
+- If logged in:
+  - Allow access to sewa page
+- Use middleware auth properly
+- DO NOT block marketplace browsing
+
+### 4️⃣ CONTROLLER LOGIC
+- Verify AlatController & PenyewaanController
+- Ensure:
+  - Alat ID is passed correctly
+  - Stock > 0 validation exists
+  - No abort(403/404) incorrectly triggered
+- Wrap logic in DB::transaction where needed
+
+### 5️⃣ UI INTERACTION FIX
+- Ensure button:
+  - Has hover + active state
+  - Is not overlapped by invisible elements
+- Ensure cursor:pointer
+- Ensure no JS error blocks click
+
+### 6️⃣ ERROR HANDLING
+- If stock = 0:
+  - Disable button gracefully
+  - Show “Stok habis”
+- If route missing:
+  - Fix route reference (do NOT create fake route)
+
+---
+
+OUTPUT REQUIREMENTS:
+- Explain the ROOT CAUSE of why "Sewa" was not clickable
+- Show ONLY necessary code changes
+- Specify file paths (Blade / Vue / Controller / Route)
+- NO placeholders
+- NO pseudo-code
+- NO unrelated refactor
+
+FINAL CHECK:
+- Click "Sewa" → works
+- Logged out → redirected to login
+- Logged in → goes to penyewaan flow
+- Stock reduces correctly after sewa
+- No console error
+- No 404 / 403
+
+FAIL CONDITION:
+If "Sewa" still does not work → YOU FAILED. FIX AGAIN.
+
+
+
+ROLE:
+You are a Senior Laravel 12 Engineer.
+You MUST act as a debugger and system integrator, not a UI designer.
+
+PROJECT:
+Laravel 12 — Sistem Informasi Penyewaan Alat dan Barang
+
+CURRENT PROBLEM (CRITICAL):
+The "Sewa" button on `/alat` page CANNOT be clicked AND
+NO rental (penyewaan) data is inserted into the database.
+
+THIS IS A BUSINESS LOGIC FAILURE, NOT UI ONLY.
+
+---
+
+ABSOLUTE RULES:
+1. The "Sewa" action MUST create a record in database
+2. The flow MUST use proper CRUD (CREATE penyewaan)
+3. DO NOT fake data
+4. DO NOT use dummy placeholders
+5. DO NOT bypass database
+6. DO NOT silently fail
+7. If something is missing, FIX IT PROPERLY
+8. All changes must be REAL, TRACEABLE, and WORKING
+
+---
+
+EXPECTED RENTAL FLOW (MANDATORY):
+
+1️⃣ USER clicks "SEWA" on marketplace (/alat)
+2️⃣ SYSTEM checks authentication:
+   - If NOT logged in → redirect to /login
+   - If logged in → continue
+3️⃣ SYSTEM opens rental form OR directly submits rental
+4️⃣ SYSTEM validates:
+   - alat_id exists
+   - stok > 0
+   - tanggal mulai & selesai valid
+5️⃣ SYSTEM inserts into:
+   - tabel penyewaan
+   - tabel detail_penyewaan (if exists)
+6️⃣ SYSTEM reduces stock in alat table
+7️⃣ SYSTEM redirects with SUCCESS message
+8️⃣ DATA MUST APPEAR in database
+
+---
+
+MANDATORY TECHNICAL CHECKLIST (YOU MUST VERIFY ALL):
+
+### A. ROUTING
+- Ensure `penyewaan.store` route EXISTS
+- HTTP METHOD must be POST
+- Route name used in frontend MUST MATCH
+
+### B. FRONTEND ACTION
+- The "Sewa" button MUST:
+  - Be a `<form method="POST">` OR
+  - A link to `/penyewaan/create?alat_id=XX`
+- CSRF token MUST exist
+- Button MUST NOT be disabled
+- No overlay or z-index blocking click
+
+### C. CONTROLLER (CRITICAL)
+- PenyewaanController::store MUST:
+  - Receive alat_id
+  - Use auth()->id()
+  - Insert to database using Eloquent
+  - Use DB::transaction
+  - Handle stock decrement
+
+### D. DATABASE
+- Ensure tables:
+  - penyewaan
+  - alat
+- Ensure foreign keys match
+- Ensure fillable fields exist
+
+### E. ERROR VISIBILITY
+- If insert fails → throw error
+- If validation fails → show message
+- NO silent failure allowed
+
+---
+
+WHAT YOU MUST OUTPUT:
+
+1. ROOT CAUSE why "Sewa" does NOT save to database
+2. EXACT file(s) to fix:
+   - route file
+   - blade / inertia component
+   - controller
+3. REAL Laravel code (NOT pseudo-code)
+4. Explanation of data flow from click → DB
+5. Confirmation checklist:
+   - Button clickable ✅
+   - Data saved to DB ✅
+   - Stock updated ✅
+
+---
+
+FAIL CONDITION:
+If after your fix:
+- Database still empty
+- Button still not working
+- Or flow is incomplete
+
+YOU MUST DEBUG AGAIN UNTIL IT WORKS.
+NO EXCUSES.
+
+THIS IS A CRUD SYSTEM, NOT A DEMO.

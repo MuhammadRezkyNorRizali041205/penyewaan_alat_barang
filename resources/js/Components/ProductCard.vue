@@ -1,5 +1,5 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { Link, router, usePage } from '@inertiajs/vue3';
 
 const props = defineProps({
   alat: {
@@ -19,6 +19,25 @@ const formatCurrency = (value) => {
 
 const isOutOfStock = () => {
   return (props.alat.stok_tersedia ?? props.alat.stok) <= 0;
+};
+
+const handleSewaClick = () => {
+  const page = usePage();
+
+  // If user not authenticated, redirect to login
+  if (!page.props.auth?.user) {
+    router.visit('/login');
+    return;
+  }
+
+  // If out of stock, do nothing
+  if (isOutOfStock()) {
+    return;
+  }
+
+  // Navigate to create rental page
+  const createUrl = route('penyewaan.create', { alat_id: props.alat.id });
+  router.visit(createUrl);
 };
 </script>
 
@@ -101,17 +120,13 @@ const isOutOfStock = () => {
 
       <!-- Buttons -->
       <div class="grid grid-cols-2 gap-2 mt-auto">
-        <Link
-          :href="route('penyewaan.create', { alat_id: props.alat.id })"
-          class="w-full"
+        <button
+          @click="handleSewaClick"
+          :disabled="isOutOfStock()"
+          class="w-full bg-green-600 text-white text-sm font-semibold py-2.5 rounded-lg transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed hover:enabled:bg-green-700 active:enabled:scale-95"
         >
-          <button
-            :disabled="isOutOfStock()"
-            class="w-full bg-green-600 text-white text-sm font-semibold py-2.5 rounded-lg transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed hover:enabled:bg-green-700 active:enabled:scale-95"
-          >
-            🛒 Sewa
-          </button>
-        </Link>
+          🛒 Sewa
+        </button>
         <Link
           :href="route('alat.show', props.alat.id)"
           class="w-full"
